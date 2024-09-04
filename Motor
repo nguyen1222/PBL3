@@ -1,0 +1,35 @@
+#define RELAY_PIN 23     // Pin điều khiển relay
+#define BUTTON_PIN 22    // Pin cho nút nhấn
+
+bool motorState = false;  // Trạng thái của động cơ
+
+void setup() {
+  Serial.begin(115200);   // Khởi động Serial monitor
+  pinMode(RELAY_PIN, OUTPUT);  // Đặt pin relay là đầu ra
+  pinMode(BUTTON_PIN, INPUT_PULLUP);  // Đặt pin nút nhấn là đầu vào
+}
+
+void loop() {
+  // Kiểm tra trạng thái của nút nhấn
+  if (digitalRead(BUTTON_PIN) == LOW) {
+    // Đảo trạng thái động cơ khi nút nhấn được nhấn
+    motorState = !motorState;
+    
+    if (motorState) {
+      Serial.println("Bật động cơ");
+      digitalWrite(RELAY_PIN, HIGH);  // Bật động cơ
+    } else {
+      Serial.println("Tắt động cơ");
+      digitalWrite(RELAY_PIN, LOW);   // Tắt động cơ
+    }
+    
+    // Chờ một chút để tránh nhấn nhiều lần
+    delay(200);
+    
+    // Chờ cho tới khi nút nhấn được nhả ra
+    while (digitalRead(BUTTON_PIN) == LOW);
+    
+    // Đợi một chút trước khi kiểm tra lại
+    delay(200);
+  }
+}
